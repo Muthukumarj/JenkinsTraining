@@ -85,17 +85,17 @@
     <!-- Target: Run functional tests -->
     <!-- ***** NOTE That this target does not depend upon any other target. We are calling the same build.xml file in Jenkins 
                for building as well as running functional tests. An intermediate step is deploying to Elastic Beanstalk -->    
-    <target name="runFunctionalTests" description="Running functional (selenium) tests" >
+    <target name="runFunctionalTests" description="Running functional (selenium) tests" depends="build" >
         <echo>**** Running functional tests...</echo>
         <!-- Copy seleniumConfig.xml to testbinaries folder. -->
         <copy todir="${builddir}/testbinaries">
-            <fileset dir="${srcdir}/selenium/src/inseadTesting" includes="seleniumConfig.xml" />
+            <fileset dir="${srcdir}/inseadTesting" includes="seleniumConfig.xml" />
         </copy>
         <!-- Copy TestData.xlsx to testbinaries folder. Why the "src/inseadTesting"? Because thats where the test suite expects the excel file to be. -->
         <mkdir dir="${builddir}/testbinaries/src" />
         <mkdir dir="${builddir}/testbinaries/src/inseadTesting" />
         <copy todir="${builddir}/testbinaries/src/inseadTesting">
-            <fileset dir="${srcdir}/selenium/src/inseadTesting" includes="TestData.xlsx" />
+            <fileset dir="${srcdir}/inseadTesting" includes="TestData.xlsx" />
         </copy>
         <taskdef resource="testngtasks" classpathref="classpath"/>
         <testng outputDir="${report.dir}"

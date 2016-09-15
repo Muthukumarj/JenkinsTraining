@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="0" passed="0">
+<testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Functional Tests" duration-ms="9" started-at="2016-09-15T01:23:54Z" finished-at="2016-09-15T01:23:54Z">
+  <suite name="Functional Tests" duration-ms="17612" started-at="2016-09-15T03:17:48Z" finished-at="2016-09-15T03:18:05Z">
     <groups>
     </groups>
-    <test name="Names" duration-ms="9" started-at="2016-09-15T01:23:54Z" finished-at="2016-09-15T01:23:54Z">
+    <test name="Names" duration-ms="17612" started-at="2016-09-15T03:17:48Z" finished-at="2016-09-15T03:18:05Z">
+      <class name="inseadTesting.TestNames">
+        <test-method status="PASS" signature="beforeMethod(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:inseadTesting.TestNames@13ac989]" name="beforeMethod" is-config="true" duration-ms="6271" started-at="2016-09-15T11:17:48Z" finished-at="2016-09-15T11:17:54Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[127.0.0.1]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[4444]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[firefox]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[any]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[any]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="FUNC321002_1_Update_an_active_Primary_Name_in_Peoplesoft(inseadTesting.TestParameters, inseadTesting.MyInseadUser)[pri:0, instance:inseadTesting.TestNames@13ac989]" name="FUNC321002_1_Update_an_active_Primary_Name_in_Peoplesoft" duration-ms="10750" started-at="2016-09-15T11:17:54Z" data-provider="excelData" finished-at="2016-09-15T11:18:05Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[inseadTesting.TestParameters@1a008ba]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[inseadTesting.MyInseadUser@18c99c8]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- FUNC321002_1_Update_an_active_Primary_Name_in_Peoplesoft -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:inseadTesting.TestNames@13ac989]" name="afterMethod" is-config="true" duration-ms="450" started-at="2016-09-15T11:18:05Z" finished-at="2016-09-15T11:18:05Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+      </class> <!-- inseadTesting.TestNames -->
     </test> <!-- Names -->
   </suite> <!-- Functional Tests -->
 </testng-results>

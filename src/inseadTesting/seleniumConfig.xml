@@ -3,7 +3,7 @@
   <!-- AMAZON EC2 server <parameter name="server-host" value="54.201.226.96" /> -->
   <parameter name="server-host" value="127.0.0.1" />
   <parameter name="server-port" value="4444" />
-  <parameter name="browser-name" value="chrome" />
+  <parameter name="browser-name" value="firefox" />
   <parameter name="browser-version" value="any" />
   <parameter name="operating-system" value="any" />
   <listeners>
