@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="MyINSEAD">
+
+    <!-- Folders for the source code and build -->
+    <property environment="env" />
+    <property name="srcdir" value="${env.WORKSPACE}/src" />
+    <property name="builddir" value="${env.WORKSPACE}/build" />
+
+    <!-- Define properties required for TestNG and Selenium testing -->
+    <property name="classes.dir" value="${builddir}/testbinaries" />
+    <echo message="classes.dir is ${classes.dir}" />
+    <property name="report.dir" value="${builddir}/test-output" />
+    
+    <!-- Define classpath - this will be used for TestNG and Selenium tests -->
+    <path id="classpath">
+        <fileset dir="/var/lib/jenkins/testng/">
+            <include name="**/*.jar"/>
+         </fileset>
+        <fileset dir="/var/lib/jenkins/selenium/selenium-2.49.1/">
+            <include name="**/*.jar"/>
+         </fileset>
+        <fileset dir="/var/lib/jenkins/selenium/">
+            <include name="selenium-server-standalone.jar"/>
+         </fileset>
+        <fileset dir="/var/lib/jenkins/apachepoi/">
+            <include name="**/*.jar"/>
+     	</fileset>
+        <fileset dir="/var/lib/jenkins/apachepoi/ooxml-lib/">
+            <include name="**/*.jar"/>
+     	</fileset>
+        <fileset dir="/var/lib/jenkins/commons-lang3-3.4/">
+            <include name="**/*.jar"/>
+     	</fileset>
+        <pathelement path="${classes.dir}"/>
+    </path>
+    
+    <!-- Target: Clean the workspace -->    
+    <target name="clean">
+        <delete dir="${WORKSPACE}"/>
+    </target>
+
+    <!-- Target: Build the project -->
+    <target name="build">
+        <echo message="**** Building: ${ant.project.name}: ${ant.file}"/>
+        <copy todir="${builddir}">
+            <fileset dir="${srcdir}" includes="**">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <!-- Build the test classes -->
+        <mkdir dir="${classes.dir}" />
+        <javac debug="true" includeantruntime="false" destdir="${classes.dir}">
+            <src path="${srcdir}"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <!-- Target: Run Sensio Insight analysis -->    
+    <target depends="build" name="sensioAnalysis">
+        <echo>**** Running Sensio Insight analysis</echo>
+        <mkdir dir="${builddir}/sensioOutput" />
+        <exec executable="bash">
+            <arg value="-c" />
+            <arg value="php /var/lib/jenkins/sensio/insight.phar analysis --format=pmd d0b06084-e094-461c-846a-31d8058a422a --fail-condition=&quot;counts.security > 0&quot; > ${builddir}/sensioOutput/insight-pmd.xml" />
+        </exec>
+    </target>
+
+    <!-- Target: Run PHPUnit tests -->
+	
+    <target depends="build" name="runPHPUnit" description="Running PHPUnit tests">
+    	<echo>**** Installing PHP dependencies</echo>
+        <copy file="${builddir}/app/config/parameters.yml.dist" tofile="${builddir}/app/config/parameters.yml" overwrite="true"/>
+        <exec executable="composer" dir="${builddir}">
+            <arg value="install" />
+        </exec>
+        <echo>**** Running PHPUnit</echo>
+        <exec executable="${builddir}/bin/phpunit" dir="${builddir}">
+            <arg line="--configuration ${builddir}/app/phpunit.xml.dist" />
+            <arg line="--log-junit ${builddir}/phpunit_results.xml" />
+        </exec>
+    </target>
+    
+	
+    <!-- Target: Run functional tests -->
+    <!-- ***** NOTE That this target does not depend upon any other target. We are calling the same build.xml file in Jenkins 
+               for building as well as running functional tests. An intermediate step is deploying to Elastic Beanstalk -->    
+    <target name="runFunctionalTests" description="Running functional (selenium) tests" >
+        <echo>**** Running functional tests...</echo>
+        <!-- Copy seleniumConfig.xml to testbinaries folder. -->
+        <copy todir="${builddir}/testbinaries">
+            <fileset dir="${srcdir}/selenium/src/inseadTesting" includes="seleniumConfig.xml" />
+        </copy>
+        <!-- Copy TestData.xlsx to testbinaries folder. Why the "src/inseadTesting"? Because thats where the test suite expects the excel file to be. -->
+        <mkdir dir="${builddir}/testbinaries/src" />
+        <mkdir dir="${builddir}/testbinaries/src/inseadTesting" />
+        <copy todir="${builddir}/testbinaries/src/inseadTesting">
+            <fileset dir="${srcdir}/selenium/src/inseadTesting" includes="TestData.xlsx" />
+        </copy>
+        <taskdef resource="testngtasks" classpathref="classpath"/>
+        <testng outputDir="${report.dir}"
+            haltonfailure="false"
+            useDefaultListeners="true"
+            classpathref="classpath"
+            workingDir="${builddir}/testbinaries">
+            <xmlfileset dir="${builddir}/testbinaries" includes="seleniumConfig.xml"/>
+        </testng>
+    </target>
+</project>
